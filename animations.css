@@ -1,0 +1,308 @@
+/* ==========================================================================
+  ANIMATIONS CSS: FORGE FITNESS
+  Motion, transitions, and classic training UI finish
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(0, 255, 136, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+  }
+}
+
+@keyframes pulseDotRed {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 42, 95, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(255, 42, 95, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 42, 95, 0);
+  }
+}
+
+@keyframes pulseTarget {
+  from {
+    transform: scale(1);
+    box-shadow: 0 0 35px rgba(0, 255, 136, 0.4);
+  }
+  to {
+    transform: scale(1.03);
+    box-shadow: 0 0 60px rgba(0, 255, 136, 0.8);
+  }
+}
+
+@keyframes laserScan {
+  0% {
+    top: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    top: 100%;
+    opacity: 0.8;
+  }
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ff88;
+  animation: pulseDot 2s infinite;
+  display: inline-block;
+}
+
+.pulse-dot-red {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff2a5f;
+  animation: pulseDotRed 2s infinite;
+  display: inline-block;
+}
+
+.recording-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: pulseDotRed 1.5s infinite;
+  display: inline-block;
+}
+
+/* Card Glow Effect */
+.card-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.sport-card:hover .card-glow {
+  opacity: 1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Classic black training app finish */
+body {
+  background-image: linear-gradient(135deg, #121212 0%, #090909 100%);
+}
+
+.app-header {
+  background: rgba(9, 9, 9, 0.96);
+  border-bottom-color: #292929;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.logo-icon {
+  background: #e3262e;
+  border-color: #e3262e;
+  box-shadow: none;
+  border-radius: 6px;
+}
+
+.brand-name {
+  letter-spacing: 0.5px;
+}
+
+.brand-highlight {
+  margin-left: 4px;
+}
+
+.brand-highlight,
+.sport-badge,
+.hud-indicator,
+.selector-title {
+  text-shadow: none;
+}
+
+.main-nav,
+.icon-btn,
+.athlete-header-btn,
+.brand-pill,
+.modal-card,
+.card,
+.sport-card {
+  background: #171717;
+  border-color: #303030;
+  box-shadow: none;
+}
+
+.main-nav {
+  border-radius: 6px;
+}
+
+.nav-tab-btn,
+.icon-btn,
+.athlete-header-btn {
+  border-radius: 4px;
+}
+
+.nav-tab-btn.active,
+body.theme-boxing .nav-tab-btn.active {
+  color: #ffffff;
+  background: #e3262e;
+  box-shadow: none;
+}
+
+body.theme-boxing .brand-highlight,
+body.theme-boxing .sport-badge,
+body.theme-boxing .icon-btn.active,
+.text-cyan,
+.text-blue {
+  color: #e3262e;
+  text-shadow: none;
+}
+
+.fill-green,
+.fill-cyan,
+.fill-yellow,
+.fill-crimson,
+.fill-amber {
+  background: #e3262e;
+}
+
+.hud-indicator,
+.live-ai-callout,
+.sight-ai-box,
+.coach-verdict-box {
+  box-shadow: none;
+}
+
+.btn,
+.btn-select-sport,
+.btn-primary,
+.btn-accent,
+.btn-crimson,
+.archery-btn,
+.boxing-btn {
+  border-radius: 5px;
+  background-image: none;
+  box-shadow: none;
+}
+
+.btn-primary,
+.btn-accent,
+.archery-btn,
+.boxing-btn,
+.btn-crimson {
+  background-color: #e3262e;
+  color: #ffffff;
+}
+
+.sport-card:hover,
+.sport-card:focus,
+.archery-card:hover,
+.archery-card:focus,
+.boxing-card:hover,
+.boxing-card:focus {
+  transform: translateY(-3px);
+  border-color: #e3262e;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.archery-card .card-badge,
+.boxing-card .card-badge,
+.archery-card .coach-tag,
+.boxing-card .coach-tag {
+  background: rgba(227, 38, 46, 0.12);
+  color: #f87171;
+  border-color: rgba(227, 38, 46, 0.35);
+}
+
+.archery-card .bullet-check,
+.boxing-card .bullet-check {
+  color: #e3262e;
+}
+
+.pulse-dot,
+.pulse-dot-red {
+  background: #e3262e;
+  animation: none;
+}
+
+.sport-img {
+  filter: grayscale(0.72) saturate(0.45) contrast(1.05);
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.card-glow {
+  display: none;
+}
+
+.kinetic-chain-panel .kc-step-flow {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  overflow: visible;
+}
+
+.kinetic-chain-panel .kc-node {
+  min-width: 0;
+  white-space: normal;
+}
+
+@media (max-width: 900px) {
+  .kinetic-chain-panel .kc-step-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
