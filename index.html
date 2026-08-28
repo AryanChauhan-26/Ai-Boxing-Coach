@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FORGE FITNESS | Archery & Boxing Performance Coach</title>
+  <meta name="description" content="Focused training tools for archery and boxing, including form analysis, target plotting, round timers, and voice-guided drills.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/main.css?v=forge-3">
+  <link rel="stylesheet" href="css/themes.css?v=forge-3">
+  <link rel="stylesheet" href="css/components.css?v=forge-3">
+  <link rel="stylesheet" href="css/animations.css?v=forge-3">
+</head>
+<body class="theme-archery" id="app-body">
+
+  <!-- ================= SPORT SELECTION MODAL ================= -->
+  <div id="sport-selector-modal" class="modal-overlay active">
+    <div class="modal-card sport-selector-card">
+      <div class="selector-header">
+        <div class="brand-pill">
+          <span class="pulse-dot"></span>
+          <span>FORGE FITNESS</span>
+        </div>
+        <h1 class="selector-title">Select Your Discipline</h1>
+        <p class="selector-subtitle">Choose your sport to calibrate our computer vision, biomechanics engine, and AI coach.</p>
+      </div>
+
+      <div class="sport-cards-grid">
+        <!-- ARCHERY CARD -->
+        <div class="sport-card archery-card" id="select-archery-card" tabindex="0">
+          <div class="card-glow"></div>
+          <div class="card-image-wrap">
+            <img src="assets/archery_hero.jpg" alt="Archery AI Performance Coach" class="sport-img">
+            <div class="card-badge"><span class="icon">🎯</span> PRECISION & STABILITY</div>
+          </div>
+          <div class="card-content">
+            <div class="card-title-row">
+              <h3>Archery AI Coach</h3>
+              <span class="coach-tag">Coach Artemis</span>
+            </div>
+            <p class="card-desc">Master consistency with anchor point verification, draw elbow biomechanics, target group dispersion, and sight pin calibration AI.</p>
+            <ul class="feature-bullets">
+              <li><span class="bullet-check">✓</span> Biomechanical Draw & Anchor Tracking</li>
+              <li><span class="bullet-check">✓</span> FITA 10-Ring Target Plotter & Sight AI</li>
+              <li><span class="bullet-check">✓</span> SPT Isometric Endurance & Breathing Lab</li>
+            </ul>
+            <button class="btn btn-select-sport archery-btn" id="btn-choose-archery">
+              <span>Enter Archery Center</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- BOXING CARD -->
+        <div class="sport-card boxing-card" id="select-boxing-card" tabindex="0">
+          <div class="card-glow"></div>
+          <div class="card-image-wrap">
+            <img src="assets/boxing_hero.jpg" alt="Boxing AI Performance Coach" class="sport-img">
+            <div class="card-badge"><span class="icon">🥊</span> POWER, SPEED & REFLEXES</div>
+          </div>
+          <div class="card-content">
+            <div class="card-title-row">
+              <h3>Boxing AI Coach</h3>
+              <span class="coach-tag">Coach Titan</span>
+            </div>
+            <p class="card-desc">Dominate the ring with guard tracking, punch velocity analysis, voice-called dynamic combinations, and professional interval timer.</p>
+            <ul class="feature-bullets">
+              <li><span class="bullet-check">✓</span> Stance, Chin & Punch Velocity Vision AI</li>
+              <li><span class="bullet-check">✓</span> Pro Round Timer + Voice Combo Caller</li>
+              <li><span class="bullet-check">✓</span> Millisecond Reaction & Slip Reflex Lab</li>
+            </ul>
+            <button class="btn btn-select-sport boxing-btn" id="btn-choose-boxing">
+              <span>Enter Boxing Gym</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preferences / Profile setup -->
+      <div class="onboarding-settings-row">
+        <div class="setting-item">
+          <label for="user-level">Skill Level:</label>
+          <select id="user-level" class="styled-select">
+            <option value="beginner">Beginner / Fundamentals</option>
+            <option value="intermediate" selected>Intermediate / Club Athlete</option>
+            <option value="elite">Elite / National Competitor</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="user-stance" id="stance-label">Handedness / Stance:</label>
+          <select id="user-stance" class="styled-select">
+            <option value="right" selected>Right-Handed / Orthodox</option>
+            <option value="left">Left-Handed / Southpaw</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ATHLETE AUTHENTICATION & PROFILE MODAL ================= -->
+  <div id="athlete-auth-modal" class="modal-overlay">
+    <div class="modal-card auth-modal-card">
+      <div class="rules-card-header" style="border: none; padding-bottom: 0; margin-bottom: 12px;">
+        <div class="brand-pill" style="margin-bottom: 0;">
+          <span class="pulse-dot"></span>
+          <span>FORGE ATHLETE PORTAL</span>
+        </div>
+        <button class="btn-sm btn-ghost" id="btn-close-auth-modal" style="font-size: 16px; padding: 4px 10px;">✕</button>
+      </div>
+
+      <div class="auth-tabs-nav">
+        <button class="auth-tab-btn active" data-pane="auth-pane-profile">👤 Athlete Profile</button>
+        <button class="auth-tab-btn" data-pane="auth-pane-signin">🔑 Sign In</button>
+        <button class="auth-tab-btn" data-pane="auth-pane-signup">✨ Create Account</button>
+      </div>
+
+      <!-- Pane 1: Athlete Profile & Stats -->
+      <div id="auth-pane-profile" class="auth-pane active">
+        <div class="profile-stats-card">
+          <div class="profile-user-row">
+            <div class="profile-avatar-lg" id="profile-view-avatar">⚡</div>
+            <div class="profile-name-group">
+              <h4 id="profile-view-name">Aryan Chauhan</h4>
+              <p id="profile-view-email">aryan@forgefitness.app</p>
+              <span class="badge badge-accent" id="profile-view-role" style="margin-top: 4px; display: inline-block;">Elite Combat & Precision Athlete</span>
+            </div>
+          </div>
+
+          <div class="profile-stats-grid">
+            <div class="profile-stat-box">
+              <span class="num" id="profile-stat-xp">3,450</span>
+              <span class="lbl">Athlete XP</span>
+            </div>
+            <div class="profile-stat-box">
+              <span class="num" id="profile-stat-sessions">38</span>
+              <span class="lbl">Sessions Done</span>
+            </div>
+            <div class="profile-stat-box">
+              <span class="num" id="profile-stat-streak">14 Days</span>
+              <span class="lbl">Active Streak</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row-split" style="margin-top: 16px;">
+          <button class="btn btn-outline" id="btn-export-profile-data">Export Training Passport</button>
+          <button class="btn btn-danger-ghost" id="btn-athlete-signout">Sign Out</button>
+        </div>
+      </div>
+
+      <!-- Pane 2: Sign In -->
+      <div id="auth-pane-signin" class="auth-pane">
+        <form id="athlete-signin-form">
+          <div class="form-group">
+            <label for="signin-email">Athlete Email / ID</label>
+            <input type="email" id="signin-email" class="styled-input" placeholder="e.g. athlete@forgefitness.app" value="aryan@forgefitness.app" required>
+          </div>
+          <div class="form-group">
+            <label for="signin-pass">Security Key / Password</label>
+            <input type="password" id="signin-pass" class="styled-input" placeholder="••••••••" value="password123" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top: 12px;">Sign In to Forge</button>
+        </form>
+      </div>
+
+      <!-- Pane 3: Sign Up -->
+      <div id="auth-pane-signup" class="auth-pane">
+        <form id="athlete-signup-form" onsubmit="event.preventDefault(); document.getElementById('signin-email').value = document.getElementById('signup-email').value; document.getElementById('athlete-signin-form').dispatchEvent(new Event('submit'));">
+          <div class="form-group">
+            <label for="signup-name">Full Athlete Name</label>
+            <input type="text" id="signup-name" class="styled-input" placeholder="e.g. Maya Chen" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email Address</label>
+            <input type="email" id="signup-email" class="styled-input" placeholder="e.g. athlete@forgefitness.app" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-discipline">Primary Discipline</label>
+            <select id="signup-discipline" class="styled-select">
+              <option value="archery">Olympic Archery (Recurve & Compound)</option>
+              <option value="boxing">Championship Boxing (Pro / Amateur)</option>
+              <option value="both">Multi-Discipline Precision Athlete</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-accent btn-full" style="margin-top: 12px;">Create Athlete Account</button>
+        </form>
+      </div>
+
+      <!-- 1-Click Demo Profiles -->
+      <div class="demo-athletes-section">
+        <div class="demo-athletes-title">⚡ Or 1-Click Demo Profile Switch</div>
+        <div class="demo-athletes-grid">
+          <div class="demo-athlete-pill" data-demo="artemis">
+            <span class="demo-avatar">🏹</span>
+            <span class="demo-name">Artemis</span>
+            <span class="demo-role">Olympic Archer</span>
+          </div>
+          <div class="demo-athlete-pill" data-demo="titan">
+            <span class="demo-avatar">🥊</span>
+            <span class="demo-name">Titan</span>
+            <span class="demo-role">Pro Boxer</span>
+          </div>
+          <div class="demo-athlete-pill" data-demo="rookie">
+            <span class="demo-avatar">⚡</span>
+            <span class="demo-name">Rookie</span>
+            <span class="demo-role">Beginner Athlete</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DEEP SHOT BIOMECHANICS ANALYSIS MODAL (ARCHERY) ================= -->
+  <div id="deep-shot-analysis-modal" class="modal-overlay">
+    <div class="modal-card deep-analysis-modal-card">
+      <div class="rules-card-header" style="border: none; padding-bottom: 0; margin-bottom: 12px;">
+        <div class="brand-pill" style="margin-bottom: 0;">
+          <span class="pulse-dot"></span>
+          <span>AI SHOT BIOMECHANICS LAB</span>
+        </div>
+        <button class="btn-sm btn-ghost" id="btn-close-shot-modal" style="font-size: 16px; padding: 4px 10px;">✕</button>
+      </div>
+
+      <div class="deep-score-hero">
+        <div class="score-details">
+          <div class="badge badge-accent" style="margin-bottom: 6px;">FRAME CAPTURE VERIFIED</div>
+          <h3>Olympic Shot Form Rating: 96.8 / 100</h3>
+          <p>Biomechanical keypoints locked at clicker expansion peak. Zero draw arm collapse detected.</p>
+        </div>
+        <div class="score-badge-circle">
+          <span class="score-num">97%</span>
+          <span class="score-max">PERFECT</span>
+        </div>
+      </div>
+
+      <div class="biomech-grid-4">
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🎯 Draw Elbow Line</span>
+            <span class="biomech-m-val">174.5° (OPTIMAL)</span>
+          </div>
+          <p class="biomech-m-desc">Rear elbow aligns directly on the arrow vector line, transferring tension through rhomboids.</p>
+        </div>
+
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🎯 Anchor Point Tremor</span>
+            <span class="biomech-m-val">0.12 cm (LOW)</span>
+          </div>
+          <p class="biomech-m-desc">Solid bone-to-bone lock under mandible with nose contact holding zero drift.</p>
+        </div>
+
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🎯 Bow Shoulder Level</span>
+            <span class="biomech-m-val">0.8° (LOCKED)</span>
+          </div>
+          <p class="biomech-m-desc">Bow arm scapula firmly depressed; no shoulder hunching during expansion phase.</p>
+        </div>
+
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🎯 Expansion Timing</span>
+            <span class="biomech-m-val">2.8s (CADENCE)</span>
+          </div>
+          <p class="biomech-m-desc">Smooth 1.5mm back expansion through the clicker with clean surprise release.</p>
+        </div>
+      </div>
+
+      <div class="deep-coach-verdict">
+        <div class="deep-coach-avatar">🏹</div>
+        <div class="deep-coach-body">
+          <h4>Coach Artemis AI Biomechanics Verdict:</h4>
+          <p id="deep-shot-verdict-text">"Outstanding shot form! Your draw elbow angle is in the Olympic gold medal range (174.5°). Continue to focus on sustaining forward bow arm pressure for 2 seconds post-release to guarantee 10-ring groups."</p>
+        </div>
+      </div>
+
+      <div class="action-row-split" style="gap: 10px;">
+        <button class="btn btn-outline" id="btn-deep-hear-coach">🔊 Hear Coach Audio Breakdown</button>
+        <button class="btn btn-primary" id="btn-deep-autoplot-target">🎯 Plot Shot to Target Face</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DEEP STRIKE BIOMECHANICS ANALYSIS MODAL (BOXING) ================= -->
+  <div id="deep-strike-analysis-modal" class="modal-overlay">
+    <div class="modal-card deep-analysis-modal-card">
+      <div class="rules-card-header" style="border: none; padding-bottom: 0; margin-bottom: 12px;">
+        <div class="brand-pill" style="margin-bottom: 0; background: rgba(255, 42, 95, 0.1); border-color: rgba(255, 42, 95, 0.3); color: #ff2a5f;">
+          <span class="pulse-dot-red"></span>
+          <span>AI STRIKE BIOMECHANICS LAB</span>
+        </div>
+        <button class="btn-sm btn-ghost" id="btn-close-strike-modal" style="font-size: 16px; padding: 4px 10px;">✕</button>
+      </div>
+
+      <div class="deep-score-hero boxing-hero-glow">
+        <div class="score-details">
+          <div class="badge badge-crimson" style="margin-bottom: 6px;">STRIKE IMPACT CAPTURED</div>
+          <h3>Championship Kinetic Output: 1,540 N</h3>
+          <p>Kinetic chain completed with 55° rear foot pivot and 48° pelvic torque drive.</p>
+        </div>
+        <div class="score-badge-circle">
+          <span class="score-num">9.1</span>
+          <span class="score-max">M / SEC</span>
+        </div>
+      </div>
+
+      <div class="biomech-grid-4">
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🥊 Kinetic Power Transfer</span>
+            <span class="biomech-m-val">94% (EXPLOSIVE)</span>
+          </div>
+          <p class="biomech-m-desc">Rear foot drive transferred smoothly through core and shoulders to fist knuckle plane.</p>
+        </div>
+
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🥊 Guard Integrity</span>
+            <span class="biomech-m-val">98% (SECURE)</span>
+          </div>
+          <p class="biomech-m-desc">Non-punching glove stayed glued to zygomatic cheekbone to stop counter hooks.</p>
+        </div>
+
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🥊 Chin Slot Angle</span>
+            <span class="biomech-m-val">-15° (TUCKED)</span>
+          </div>
+          <p class="biomech-m-desc">Chin remained protected behind lead shoulder collar throughout strike extension.</p>
+        </div>
+
+        <div class="biomech-metric-box">
+          <div class="biomech-m-header">
+            <span class="biomech-m-label">🥊 Hip & Core Torque</span>
+            <span class="biomech-m-val">48° (FULL DRIVE)</span>
+          </div>
+          <p class="biomech-m-desc">Rotational torque generated from hips rather than pushing from the arm.</p>
+        </div>
+      </div>
+
+      <div class="deep-coach-verdict">
+        <div class="deep-coach-avatar">🥊</div>
+        <div class="deep-coach-body">
+          <h4>Coach Titan AI Corner Verdict:</h4>
+          <p id="deep-strike-verdict-text">"Vicious strike execution! Your cross velocity reached 9.1 m/s with 1,540 Newtons of force. Guard uptime was elite. Keep that rear heel high on the pivot!"</p>
+        </div>
+      </div>
+
+      <div class="action-row-split" style="gap: 10px;">
+        <button class="btn btn-outline" id="btn-deep-strike-hear-coach">🔊 Hear Coach Titan Breakdown</button>
+        <button class="btn btn-crimson" id="btn-deep-strike-save">💾 Save to Fight Camp Log</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-logo" title="Click to Switch Discipline">
+          <div class="logo-icon" id="header-logo-icon">🎯</div>
+          <div class="logo-text">
+            <span class="brand-name">FORGE<span class="brand-highlight">FITNESS</span></span>
+            <span class="sport-badge" id="current-sport-badge">ARCHERY PRECISION LAB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Sport View Navigation Tabs -->
+      <nav class="main-nav" id="main-nav-tabs">
+        <!-- Injected dynamically based on active sport -->
+      </nav>
+
+      <!-- Utility Actions -->
+      <div class="header-actions">
+        <!-- Voice Coach Audio Indicator / Switch -->
+        <button class="icon-btn active" id="btn-toggle-voice" title="Toggle AI Voice Coach (Web Speech)" aria-label="Toggle Voice Coach">
+          <svg class="voice-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <span class="voice-status-label">Voice: ON</span>
+        </button>
+
+        <!-- Sound SFX Switch -->
+        <button class="icon-btn" id="btn-toggle-sfx" title="Toggle Sound FX (Bells/Thuds)" aria-label="Toggle Sound Effects">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+        </button>
+
+        <!-- Athlete Login & Portal Button -->
+        <button class="athlete-header-btn" id="btn-athlete-login" title="Open Athlete Profile & Portal">
+          <span class="athlete-avatar-dot">⚡</span>
+          <span>Aryan Chauhan</span>
+          <span class="badge badge-crimson" style="font-size: 9.5px; padding: 2px 6px;">PRO</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="main-content" id="main-content-view">
+
+    <!-- ================= ARCHERY VIEW CONTAINER ================= -->
+    <div id="archery-container" class="sport-view-container active-view">
+      
+      <!-- TAB 1: VISION FORM & BIOMECHANICS -->
+      <section id="archery-tab-vision" class="app-tab-pane active">
+        <div class="pane-grid">
+          <!-- Vision Camera / Video Panel -->
+          <div class="card vision-card">
+            <div class="card-top-bar">
+              <div class="hud-indicator">
+                <span class="recording-dot"></span>
+                <span id="archery-cam-status">AI BIOMECHANIC TRACKER: READY</span>
+              </div>
+              <div class="vision-controls">
+                <button class="btn-sm btn-ghost" id="archery-demo-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span>Simulate Pro Archer Draw</span>
+                </button>
+                <button class="btn-sm btn-primary" id="archery-webcam-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m14 8-4 4 4 4"/></svg>
+                  <span>Start Live Camera</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="viewport-container" id="archery-viewport">
+              <video id="archery-video" playsinline muted style="display: none;"></video>
+              <canvas id="archery-canvas" width="800" height="500"></canvas>
+              
+              <!-- Realtime HUD Overlays -->
+              <div class="hud-overlay-grid">
+                <div class="hud-metric-box" id="hud-anchor-box">
+                  <span class="hud-label">ANCHOR POINT</span>
+                  <span class="hud-val" id="hud-anchor-val">LOCKED (98%)</span>
+                </div>
+                <div class="hud-metric-box" id="hud-elbow-box">
+                  <span class="hud-label">DRAW ELBOW ANGLE</span>
+                  <span class="hud-val" id="hud-elbow-val">174.5° (OPTIMAL)</span>
+                </div>
+                <div class="hud-metric-box" id="hud-shoulder-box">
+                  <span class="hud-label">BOW SHOULDER</span>
+                  <span class="hud-val" id="hud-shoulder-val">LEVEL (0.8°)</span>
+                </div>
+                <div class="hud-metric-box" id="hud-stability-box">
+                  <span class="hud-label">SIGHT PIN STABILITY</span>
+                  <span class="hud-val" id="hud-stability-val">0.34 MOA</span>
+                </div>
+              </div>
+
+              <!-- Realtime Coaching Toast on Video -->
+              <div class="live-ai-callout" id="archery-ai-callout">
+                <div class="callout-icon">🎯</div>
+                <div class="callout-body">
+                  <span class="callout-tag">AI BIOMECHANICS FEEDBACK</span>
+                  <p id="archery-callout-text">Align your draw elbow 2° higher to engage your rhomboids and back tension.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vision Action Controls -->
+            <div class="vision-bottom-actions">
+              <div class="draw-cycle-bar">
+                <div class="cycle-step active" id="step-setup">1. Stance & Setup</div>
+                <div class="cycle-step" id="step-draw">2. Draw & Hook</div>
+                <div class="cycle-step" id="step-anchor">3. Anchor & Aim</div>
+                <div class="cycle-step" id="step-release">4. Expansion & Follow-Through</div>
+              </div>
+              <button class="btn btn-sm btn-accent" id="archery-analyze-capture-btn">
+                <span>Capture & Deep Analyze Shot</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-time Metrics & Angle Breakdown Panel -->
+          <div class="card metrics-sidebar">
+            <div class="card-header">
+              <h3>Archery Biomechanics Engine</h3>
+              <span class="badge badge-success">Live Analysis</span>
+            </div>
+
+            <div class="angle-gauges-container">
+              <!-- Gauge 1 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Draw Elbow Line (Target: 172°-180°)</span>
+                  <strong id="gauge-elbow-num">174.5°</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-green" id="gauge-elbow-bar" style="width: 95%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 2 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Anchor Jitter / Tremor</span>
+                  <strong id="gauge-jitter-num">0.12 cm (Low)</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-cyan" id="gauge-jitter-bar" style="width: 88%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 3 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Shoulder Plane Alignment</span>
+                  <strong id="gauge-shoulder-num">97% Perfect</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-green" id="gauge-shoulder-bar" style="width: 97%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 4 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Head Posture / Canting</span>
+                  <strong id="gauge-cant-num">1.2° Vertical</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-yellow" id="gauge-cant-bar" style="width: 92%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="coach-summary-box">
+              <div class="coach-avatar">
+                <span>🏹</span>
+              </div>
+              <div class="coach-message">
+                <strong>Artemis AI Biomechanics Coach:</strong>
+                <p id="artemis-biomech-summary">"Your expansion timing is consistent at 2.8s. Ensure you maintain strong bow arm pressure toward the 10-ring through string departure to eliminate low-left tears."</p>
+              </div>
+            </div>
+
+            <div class="quick-action-buttons">
+              <button class="btn btn-outline btn-full" id="btn-save-shot-sample">Save Form Snapshot to Log</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: ARCHERY VIDEO ACADEMY (YOUTUBE FUNDAMENTALS) -->
+      <section id="archery-tab-videos" class="app-tab-pane">
+        <div class="academy-hero">
+          <div class="academy-hero-text">
+            <div class="brand-pill">
+              <span class="pulse-dot"></span>
+              <span>BEGINNER TO OLYMPIC MASTERY</span>
+            </div>
+            <h2>Archery Video Academy & Fundamentals</h2>
+            <p>Curated masterclass tutorials for beginners to master proper stance, anchor point verification, sight calibration, and back tension release.</p>
+          </div>
+          <button class="btn btn-accent btn-practice-in-tracker">
+            <span>🎯 Practice Form in AI Tracker</span>
+          </button>
+        </div>
+
+        <div class="learning-path" aria-label="How to use the archery video academy">
+          <div class="learning-path-heading">
+            <span class="eyebrow-label">YOUR SESSION PLAN</span>
+            <h3>Learn one skill at a time</h3>
+            <p>Use the videos as a short lesson, then bring the cue into your next practice.</p>
+          </div>
+          <label class="learning-step">
+            <input type="checkbox">
+            <span class="learning-step-number">01</span>
+            <span><strong>Watch</strong><small>Choose one focused lesson</small></span>
+          </label>
+          <label class="learning-step">
+            <input type="checkbox">
+            <span class="learning-step-number">02</span>
+            <span><strong>Practice</strong><small>Repeat the key takeaway</small></span>
+          </label>
+          <label class="learning-step">
+            <input type="checkbox">
+            <span class="learning-step-number">03</span>
+            <span><strong>Check</strong><small>Open the AI tracker</small></span>
+          </label>
+        </div>
+
+        <div class="video-cards-grid">
+          <!-- Video 1: Stance & Grip -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/H6wU8E5_x5s" title="Archery Stance & Grip Fundamentals" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-beginner">Beginner Fundamentals</span>
+                <span class="video-duration">⏱️ 08:45</span>
+              </div>
+              <h4 class="video-lesson-title">Olympic Archery Stance, Posture & Bow Grip</h4>
+              <p class="video-lesson-desc">Learn the square & open stance setup, balanced foot placement, and relaxed low-wrist grip that eliminates bow torque on release.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> Feet shoulder-width apart, weight distributed 50/50 over balls of feet.</li>
+                  <li><span class="check-icon">✓</span> Place bow grip along the thenar lifeline; knuckles angled at 45°.</li>
+                  <li><span class="check-icon">✓</span> Keep bow shoulder low and settled into the joint socket.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full btn-practice-in-tracker">Test Stance in Biometrics AI</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 2: Anchor Point & Alignment -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/Q0P-9cR4XjA" title="Anchor Point & Bone-to-Bone Lock" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-fundamentals">Form Mastery</span>
+                <span class="video-duration">⏱️ 11:20</span>
+              </div>
+              <h4 class="video-lesson-title">Anchor Point Consistency & Bone-to-Bone Lock</h4>
+              <p class="video-lesson-desc">Eliminate vertical group dispersion by locking the index finger under the jawbone with string touching the center of your nose and lips.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> 3 reference points: jawbone shelf, tip of nose, and lip center.</li>
+                  <li><span class="check-icon">✓</span> Maintain a straight 174°–180° draw elbow line behind the arrow.</li>
+                  <li><span class="check-icon">✓</span> Never move your head to the string—bring the string to your face.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full btn-practice-in-tracker">Verify Anchor in AI Tracker</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 3: Aiming & Sight Pin Calibration -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/n4p_qY5L2b8" title="Aiming & Sight Pin Calibration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-fundamentals">Sight & Aiming</span>
+                <span class="video-duration">⏱️ 09:15</span>
+              </div>
+              <h4 class="video-lesson-title">How to Aim with Recurve Bow & Sight Adjustment</h4>
+              <p class="video-lesson-desc">Understand dominant eye alignment, sight picture framing within the 10-ring, and the universal rule of "chasing the arrow group" when adjusting pins.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> Follow the arrow: if hitting left, move sight pin to the left.</li>
+                  <li><span class="check-icon">✓</span> Keep your focus on the gold 10-ring target center, not on the pin.</li>
+                  <li><span class="check-icon">✓</span> Align string blur consistently along the right edge of the sight ring.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full" onclick="window.apexApp.switchTab('target');">Open Target & Sight AI</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 4: Back Tension & Clean Release -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/Y0iR8_v3iFc" title="Back Tension & Surprise Release" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-beginner">Release Execution</span>
+                <span class="video-duration">⏱️ 14:30</span>
+              </div>
+              <h4 class="video-lesson-title">Expansion, Clicker Timing & Back Tension Release</h4>
+              <p class="video-lesson-desc">Engage your rhomboid and latissimus dorsi muscles to smoothly draw through the clicker without plucking the string or dropping the bow arm.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> Expansion should take 1.5 to 3.0 seconds through back tension.</li>
+                  <li><span class="check-icon">✓</span> Relax finger muscles—allow the string to slip off the tab naturally.</li>
+                  <li><span class="check-icon">✓</span> Maintain bow arm elevation for 2 seconds follow-through.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full" onclick="window.apexApp.switchTab('spt');">Launch SPT Endurance Hold</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: ARCHERY RULES & REGULATIONS (OFFICIAL WA GUIDE) -->
+      <section id="archery-tab-rules" class="app-tab-pane">
+        <div class="rules-hero-card">
+          <div class="rules-hero-left">
+            <div class="brand-pill">
+              <span class="pulse-dot"></span>
+              <span>WORLD ARCHERY (WA / FITA) STANDARDS</span>
+            </div>
+            <h2>Official Archery Rules, Target Scoring & Safety Protocol</h2>
+            <p>Easy-to-understand reference guide for World Archery target scoring, line-cutter regulations, timing limits, whistle signals, and tournament etiquette.</p>
+          </div>
+        </div>
+
+        <div class="rules-sections-grid">
+          <!-- Card 1: 10-Ring Target Face & Scoring Breakdown -->
+          <div class="rules-card">
+            <div class="rules-card-header">
+              <h3>🎯 Target Face & 10-Ring Scoring</h3>
+              <span class="badge badge-accent">World Archery Standard</span>
+            </div>
+            <p class="card-desc" style="margin-bottom: 14px;">The standard outdoor target face has 10 concentric scoring zones divided into 5 distinct color bands:</p>
+
+            <div class="target-rings-display">
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-gold"></span><strong>Inner 10 (X-Ring) & 10 Ring:</strong> Gold Center</div>
+                <span class="ring-score-val text-green">10 Points (X for tiebreaker)</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-gold"></span><strong>9 Ring:</strong> Outer Gold Zone</div>
+                <span class="ring-score-val text-green">9 Points</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-red"></span><strong>8 & 7 Rings:</strong> Red Zone</div>
+                <span class="ring-score-val text-cyan">8 & 7 Points</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-blue"></span><strong>6 & 5 Rings:</strong> Blue Zone</div>
+                <span class="ring-score-val text-cyan">6 & 5 Points</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-black"></span><strong>4 & 3 Rings:</strong> Black Zone</div>
+                <span class="ring-score-val text-yellow">4 & 3 Points</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-white"></span><strong>2 & 1 Rings:</strong> White Outer Zone</div>
+                <span class="ring-score-val text-muted">2 & 1 Points (Miss = 0 / M)</span>
+              </div>
+            </div>
+
+            <div class="takeaways-box" style="margin-top: 12px; background: rgba(0, 255, 136, 0.06); border-color: rgba(0, 255, 136, 0.2);">
+              <div class="takeaways-title" style="color: #00ff88;">📌 The Universal Line-Cutter Rule:</div>
+              <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.45;">
+                If an arrow shaft touches or breaks the dividing line between two scoring rings, the athlete is <strong>always awarded the higher value</strong>! (e.g. touching the 9/10 dividing line counts as a 10).
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 2: Whistle Commands & Safety Protocol -->
+          <div class="rules-card">
+            <div class="rules-card-header">
+              <h3>🔊 Range Whistle Commands & Safety</h3>
+              <span class="badge badge-cyan">Universal Safety Signals</span>
+            </div>
+            <p class="card-desc" style="margin-bottom: 14px;">All Olympic and club ranges operate under strict whistle signals to ensure athlete and spectator safety:</p>
+
+            <div class="whistle-grid">
+              <div class="whistle-card">
+                <div class="whistle-icon">🎺🎺</div>
+                <div class="whistle-info">
+                  <strong>2 Whistle Blasts</strong>
+                  <span>"Archers to the Shooting Line"</span>
+                </div>
+              </div>
+              <div class="whistle-card">
+                <div class="whistle-icon">🎺</div>
+                <div class="whistle-info">
+                  <strong>1 Whistle Blast</strong>
+                  <span>"Start Shooting (Begin End)"</span>
+                </div>
+              </div>
+              <div class="whistle-card">
+                <div class="whistle-icon">🎺🎺🎺</div>
+                <div class="whistle-info">
+                  <strong>3 Whistle Blasts</strong>
+                  <span>"Retrieve & Score Arrows"</span>
+                </div>
+              </div>
+              <div class="whistle-card emergency">
+                <div class="whistle-icon">🚨🚨</div>
+                <div class="whistle-info">
+                  <strong style="color: #ff2a5f;">4+ Rapid Blasts</strong>
+                  <span>"EMERGENCY STOP! Lower Bows!"</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="takeaways-box" style="margin-top: 12px;">
+              <div class="takeaways-title">⏱️ Official Shot Clock Limits:</div>
+              <ul class="takeaways-list">
+                <li><span class="check-icon">✓</span> <strong>Individual End (6 Arrows):</strong> 120 seconds (20s / arrow).</li>
+                <li><span class="check-icon">✓</span> <strong>Yellow Signal Warning:</strong> Triggers at 30 seconds remaining.</li>
+                <li><span class="check-icon">✓</span> <strong>Arrow Dropped:</strong> If within 3 meters, can be shot if not past line.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Archery Rules Quiz -->
+        <div class="rules-quiz-card">
+          <div class="rules-card-header" style="border: none; padding-bottom: 0;">
+            <h3>🧠 Archery Rules Knowledge Check</h3>
+            <span class="badge badge-accent">Interactive Check</span>
+          </div>
+          <div class="quiz-question-box">
+            <div class="quiz-q-title">Q: Your arrow lands on the border dividing line between the Red 8-ring and Gold 9-ring. What is the official score awarded under World Archery rules?</div>
+            <div class="quiz-options-grid">
+              <button class="quiz-opt-btn archery-quiz-opt" data-correct="false">A) 8 Points (Lower ring default)</button>
+              <button class="quiz-opt-btn archery-quiz-opt" data-correct="true">B) 9 Points (Higher value awarded for line-cutters)</button>
+              <button class="quiz-opt-btn archery-quiz-opt" data-correct="false">C) 8.5 Points (Averaged score)</button>
+              <button class="quiz-opt-btn archery-quiz-opt" data-correct="false">D) Void arrow, must re-shoot</button>
+            </div>
+            <div class="quiz-feedback" id="archery-quiz-feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: INTERACTIVE TARGET PLOTTER & SIGHT AI -->
+      <section id="archery-tab-target" class="app-tab-pane">
+        <div class="pane-grid">
+          <!-- Target Face Canvas -->
+          <div class="card target-card">
+            <div class="card-top-bar">
+              <div>
+                <h3 class="card-title">World Archery 10-Ring Target Face (WA / FITA 70m/18m)</h3>
+                <p class="card-subtitle">Click anywhere on the target to plot arrow impact coordinates in real-time.</p>
+              </div>
+              <div class="target-controls-row">
+                <button class="btn-sm btn-ghost" id="target-sample-group-btn">Plot Sample End (6 Arrows)</button>
+                <button class="btn-sm btn-danger-ghost" id="target-clear-btn">Clear Target</button>
+              </div>
+            </div>
+
+            <div class="target-canvas-wrapper">
+              <canvas id="archery-target-canvas" width="520" height="520"></canvas>
+              
+              <div class="target-sidebar-stats">
+                <div class="stat-pill">
+                  <span class="stat-label">ARROWS PLOTTED</span>
+                  <span class="stat-num" id="stat-arrow-count">0 / 6</span>
+                </div>
+                <div class="stat-pill">
+                  <span class="stat-label">CURRENT END SCORE</span>
+                  <span class="stat-num" id="stat-end-score">0 / 60</span>
+                </div>
+                <div class="stat-pill">
+                  <span class="stat-label">GROUP DIAMETER</span>
+                  <span class="stat-num" id="stat-group-radius">-- cm</span>
+                </div>
+                <div class="stat-pill">
+                  <span class="stat-label">GROUP CENTER (X, Y)</span>
+                  <span class="stat-num" id="stat-group-center">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sight Adjustment AI & Shot Dispersion Analytics -->
+          <div class="card sight-ai-card">
+            <div class="card-header">
+              <h3>Sight Pin Calibration & AI Analytics</h3>
+              <span class="badge badge-accent">Auto-Calculated</span>
+            </div>
+
+            <!-- Sight Advice Box -->
+            <div class="sight-ai-box" id="sight-ai-box">
+              <div class="sight-status-badge">
+                <span class="pulse-dot"></span>
+                <span>AI SIGHT ALGORITHM</span>
+              </div>
+              <h4 id="sight-recommendation-title">Plot arrows to generate sight adjustments</h4>
+              <p id="sight-recommendation-desc">Click at least 3 arrows on the target face. The AI will compute your center of mass and calculate precise micrometer click corrections.</p>
+              
+              <div class="sight-click-counters" id="sight-clicks-display" style="display: none;">
+                <div class="click-chip">
+                  <span class="chip-direction" id="sight-h-dir">RIGHT</span>
+                  <span class="chip-count" id="sight-h-clicks">4 Clicks</span>
+                </div>
+                <div class="click-chip">
+                  <span class="chip-direction" id="sight-v-dir">UP</span>
+                  <span class="chip-count" id="sight-v-clicks">2 Clicks</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Arrow Log Table -->
+            <div class="arrow-log-container">
+              <h4>Current End Arrow Log</h4>
+              <div class="arrow-log-list" id="arrow-log-list">
+                <div class="log-empty-state">No arrows plotted yet. Tap the target face to start.</div>
+              </div>
+            </div>
+
+            <div class="action-row-split">
+              <button class="btn btn-outline" id="btn-undo-arrow">Undo Last Arrow</button>
+              <button class="btn btn-primary" id="btn-commit-end">Log End to History</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: ARTEMIS AI ARCHERY COACH (CONVERSATIONAL) -->
+      <section id="archery-tab-coach" class="app-tab-pane">
+        <div class="chat-layout-grid">
+          <!-- Chat Messages Window -->
+          <div class="card chat-card">
+            <div class="chat-header">
+              <div class="coach-profile">
+                <div class="coach-avatar-lg">🏹</div>
+                <div>
+                  <h4>Coach Artemis | Elite Olympic Archery AI</h4>
+                  <p class="coach-status"><span class="status-dot"></span> Recurve, Compound & Barebow Master System</p>
+                </div>
+              </div>
+              <div class="chat-header-actions">
+                <button class="btn-sm btn-ghost" id="archery-clear-chat-btn">Clear History</button>
+              </div>
+            </div>
+
+            <div class="chat-messages-scroll" id="archery-chat-messages">
+              <div class="message-bubble coach-msg">
+                <div class="msg-avatar">🏹</div>
+                <div class="msg-content">
+                  <p>Greetings, Archer! I'm <strong>Artemis</strong>, your Olympic & World-Archery AI Performance Coach. Whether you need tuning for arrow spine and plunger stiffness, release drills to beat target panic, or biomechanic alignment corrections, I'm at your service.</p>
+                  <p>What discipline or challenge are we focusing on today?</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Prompt Pills -->
+            <div class="quick-prompts-bar" id="archery-quick-prompts">
+              <button class="prompt-pill" data-prompt="How do I cure target panic and develop a surprise release?">🎯 Cure Target Panic</button>
+              <button class="prompt-pill" data-prompt="Explain proper draw elbow alignment and back tension.">💪 Draw Elbow & Rhomboid Tension</button>
+              <button class="prompt-pill" data-prompt="How do I tune my plunger button and arrow spine for left-drifting groups?">🏹 Plunger & Spine Tuning</button>
+              <button class="prompt-pill" data-prompt="Give me a 15-minute SPT isometric hold routine.">⏱️ 15-Min SPT Routine</button>
+              <button class="prompt-pill" data-prompt="How should I control breathing during the shot cycle in high wind?">💨 Wind & Shot Timing</button>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-row">
+              <input type="text" id="archery-chat-input" placeholder="Ask Coach Artemis anything (e.g. form mechanics, equipment tuning, mental routine)..." autocomplete="off">
+              <button class="btn btn-primary" id="archery-chat-send-btn">
+                <span>Send</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Coach Technical Reference Sidebar -->
+          <div class="card coach-ref-card">
+            <div class="card-header">
+              <h3>Archery Knowledge Matrix</h3>
+            </div>
+            <div class="accordion-group">
+              <div class="acc-card">
+                <div class="acc-header" onclick="this.parentElement.classList.toggle('open')">
+                  <span>🏹 9-Step Olympic Shot Cycle</span>
+                  <span class="acc-icon">▼</span>
+                </div>
+                <div class="acc-body">
+                  <ol class="step-list">
+                    <li><strong>Stance:</strong> Open 45° or square, feet shoulder-width.</li>
+                    <li><strong>Grip & Hook:</strong> Deep hook, relaxed wrist, 45° knuckle line.</li>
+                    <li><strong>Set & Mindset:</strong> Visualizing arrow path, steady breathing.</li>
+                    <li><strong>Setup:</strong> Raise bow arm, align scapulae without hunching.</li>
+                    <li><strong>Draw:</strong> Engage back latissimus & rhomboid muscles.</li>
+                    <li><strong>Anchor:</strong> Solid index/jawbone bone-to-bone contact.</li>
+                    <li><strong>Transfer & Aim:</strong> Transfer weight from arms to back tension.</li>
+                    <li><strong>Expansion & Release:</strong> Steady pull through clicker; relaxed fingers.</li>
+                    <li><strong>Follow-Through:</strong> Maintain bow arm stability for 2 seconds.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="acc-card">
+                <div class="acc-header" onclick="this.parentElement.classList.toggle('open')">
+                  <span>⚙️ Arrow Tuning Quick Rules</span>
+                  <span class="acc-icon">▼</span>
+                </div>
+                <div class="acc-body">
+                  <ul class="tuning-list">
+                    <li><strong>Stiff Arrow:</strong> Impact left (RH archer) → Increase draw weight, increase point weight, or soften plunger.</li>
+                    <li><strong>Weak Arrow:</strong> Impact right (RH archer) → Decrease draw weight, decrease point weight, or stiffen plunger.</li>
+                    <li><strong>Nocking Point High:</strong> Bare shaft hits low → Lower nocking point.</li>
+                    <li><strong>Nocking Point Low:</strong> Bare shaft hits high → Raise nocking point.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: SPT ENDURANCE & BREATHING LAB -->
+      <section id="archery-tab-spt" class="app-tab-pane">
+        <div class="pane-grid">
+          <!-- SPT Isometric Hold Timer -->
+          <div class="card timer-card">
+            <div class="card-header">
+              <h3>SPT (Specific Physical Training) Hold Trainer</h3>
+              <span class="badge badge-accent">Strength Endurance</span>
+            </div>
+
+            <div class="spt-timer-display">
+              <div class="timer-circle-wrap">
+                <svg class="timer-svg" viewBox="0 0 200 200">
+                  <circle class="timer-track" cx="100" cy="100" r="90"></circle>
+                  <circle class="timer-progress" id="spt-progress-circle" cx="100" cy="100" r="90"></circle>
+                </svg>
+                <div class="timer-inner-content">
+                  <span class="timer-phase-badge" id="spt-phase-badge">READY</span>
+                  <span class="timer-digits" id="spt-digits">00:30</span>
+                  <span class="timer-sublabel" id="spt-sublabel">Set 1 of 5</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="spt-config-row">
+              <div class="config-col">
+                <label>Hold Duration (s):</label>
+                <input type="number" id="spt-hold-sec" value="30" min="5" max="90" step="5" class="styled-input">
+              </div>
+              <div class="config-col">
+                <label>Rest Duration (s):</label>
+                <input type="number" id="spt-rest-sec" value="30" min="5" max="120" step="5" class="styled-input">
+              </div>
+              <div class="config-col">
+                <label>Total Sets:</label>
+                <input type="number" id="spt-total-sets" value="5" min="1" max="20" class="styled-input">
+              </div>
+            </div>
+
+            <div class="timer-action-buttons">
+              <button class="btn btn-primary btn-lg" id="spt-start-btn">Start SPT Session</button>
+              <button class="btn btn-outline btn-lg" id="spt-reset-btn">Reset</button>
+            </div>
+          </div>
+
+          <!-- Box Breathing & Heart Rate Cadence Coach -->
+          <div class="card breathing-card">
+            <div class="card-header">
+              <h3>Precision Bio-Breathing Cadence</h3>
+              <span class="badge badge-cyan">4-4-4-4 Box Rhythm</span>
+            </div>
+            <p class="card-desc">Sync your parasympathetic nervous system to eliminate fine motor tremors during high-pressure competition ends.</p>
+
+            <div class="breath-visualizer-container">
+              <div class="breath-circle" id="breath-circle">
+                <div class="breath-inner-text">
+                  <span id="breath-action-text">INHALE</span>
+                  <span id="breath-countdown">4s</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="breath-instructions-box">
+              <div class="cadence-steps">
+                <div class="c-step active" id="c-step-1">1. Inhale (4s)</div>
+                <div class="c-step" id="c-step-2">2. Hold Full (4s)</div>
+                <div class="c-step" id="c-step-3">3. Exhale (4s)</div>
+                <div class="c-step" id="c-step-4">4. Hold Empty (4s)</div>
+              </div>
+            </div>
+
+            <div class="timer-action-buttons">
+              <button class="btn btn-accent btn-full" id="breath-toggle-btn">Start Breathing Sync</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: ARCHERY SCORECARD & ANALYTICS -->
+      <section id="archery-tab-analytics" class="app-tab-pane">
+        <div class="card full-width-card">
+          <div class="card-header">
+            <div>
+              <h3>Archery Session Performance Matrix</h3>
+              <p class="card-subtitle">Aggregated scoring, grouping efficiency, and form consistency history.</p>
+            </div>
+            <button class="btn-sm btn-outline" id="btn-export-archery-stats">Export Session Report</button>
+          </div>
+
+          <div class="analytics-metrics-grid">
+            <div class="metric-card">
+              <span class="metric-title">Total Arrows Shot</span>
+              <span class="metric-value" id="stats-archery-total-arrows">72</span>
+              <span class="metric-sub text-green">↑ +18 vs last session</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Average Arrow Value</span>
+              <span class="metric-value" id="stats-archery-avg-arrow">9.2</span>
+              <span class="metric-sub text-cyan">92.0% Accuracy Index</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Mean Group Radius</span>
+              <span class="metric-value" id="stats-archery-mean-radius">4.2 cm</span>
+              <span class="metric-sub text-green">Tight cluster (WA 70m Standard)</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Form Consistency Index</span>
+              <span class="metric-value" id="stats-archery-consistency">96.4%</span>
+              <span class="metric-sub text-yellow">Elbow alignment high rating</span>
+            </div>
+          </div>
+
+          <div class="session-history-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>End #</th>
+                  <th>Arrow Scores</th>
+                  <th>Total Score</th>
+                  <th>Group Dispersion</th>
+                  <th>AI Biomechanics Verdict</th>
+                </tr>
+              </thead>
+              <tbody id="archery-ends-table-body">
+                <tr>
+                  <td>End 1</td>
+                  <td>10, 10, 9, 9, 9, 8</td>
+                  <td><strong class="text-green">55 / 60</strong></td>
+                  <td>3.8 cm</td>
+                  <td><span class="badge badge-success">Optimal Back Tension</span></td>
+                </tr>
+                <tr>
+                  <td>End 2</td>
+                  <td>10, X, 10, 9, 9, 9</td>
+                  <td><strong class="text-green">57 / 60</strong></td>
+                  <td>3.1 cm</td>
+                  <td><span class="badge badge-success">Superb Anchor Lock</span></td>
+                </tr>
+                <tr>
+                  <td>End 3</td>
+                  <td>9, 9, 8, 8, 8, 7</td>
+                  <td><strong class="text-yellow">49 / 60</strong></td>
+                  <td>6.4 cm</td>
+                  <td><span class="badge badge-warning">Slight Bow Arm Drop</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+
+    <!-- ================= BOXING VIEW CONTAINER ================= -->
+    <div id="boxing-container" class="sport-view-container">
+      
+      <!-- TAB 1: NEW UNDERSTANDABLE BIOMETRIC TRACKER AI -->
+      <section id="boxing-tab-vision" class="app-tab-pane active">
+        <!-- Interactive Biometric Tracker Subnav -->
+        <div class="biometric-subnav">
+          <div class="biometric-mode-pills">
+            <button class="bio-pill-btn bio-mode-btn active" data-mode="strike">
+              <span>⚡ 1. Strike Biomechanics & Kinetic Chain</span>
+            </button>
+            <button class="bio-pill-btn bio-mode-btn" data-mode="defense">
+              <span>🛡️ 2. Defensive Biometrics & Guard Radar</span>
+            </button>
+          </div>
+
+          <!-- Stance & Playback Toolbar -->
+          <div class="playback-controls-row">
+            <button class="btn-icon-sm" id="btn-bio-playpause">⏸ Pause</button>
+            <button class="btn-icon-sm" id="btn-bio-slowmo">⚡ 1.0x Normal</button>
+            <button class="btn-icon-sm" id="btn-bio-stance">🥊 Orthodox</button>
+          </div>
+        </div>
+
+        <div class="pane-grid">
+          <!-- Vision Camera / Biomechanics Canvas Panel -->
+          <div class="card vision-card">
+            <div class="card-top-bar">
+              <div class="hud-indicator">
+                <span class="recording-dot" style="background: #ff2a5f; box-shadow: 0 0 10px rgba(255, 42, 95, 0.7);"></span>
+                <span id="boxing-cam-status">STRIKE KINETIC CHAIN ENGINE: ACTIVE</span>
+              </div>
+              
+              <!-- Strike / Defense Selector Buttons -->
+              <div class="vision-controls">
+                <div class="strike-selector-group" id="boxing-strike-selector-row">
+                  <button class="bio-pill-btn bio-strike-btn" data-strike="jab">1. Lead Jab</button>
+                  <button class="bio-pill-btn bio-strike-btn active" data-strike="cross">2. Rear Cross</button>
+                  <button class="bio-pill-btn bio-strike-btn" data-strike="hook">3. Lead Hook</button>
+                  <button class="bio-pill-btn bio-strike-btn" data-strike="uppercut">6. Uppercut</button>
+                </div>
+                <div class="strike-selector-group" id="boxing-defense-selector-row" style="display: none;">
+                  <button class="bio-pill-btn bio-def-btn" data-defense="high-guard">High Guard</button>
+                  <button class="bio-pill-btn bio-def-btn" data-defense="slip-left">Slip Left</button>
+                  <button class="bio-pill-btn bio-def-btn active-green" data-defense="slip-right">Slip Right</button>
+                  <button class="bio-pill-btn bio-def-btn" data-defense="bob-weave">Bob & Weave</button>
+                  <button class="bio-pill-btn bio-def-btn" data-defense="philly-shell">Philly Shell</button>
+                </div>
+                <button class="btn-sm btn-primary" id="boxing-webcam-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m14 8-4 4 4 4"/></svg>
+                  <span>Start Live Camera</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="viewport-container" id="boxing-viewport">
+              <video id="boxing-video" playsinline muted style="display: none;"></video>
+              <canvas id="boxing-canvas" width="800" height="500"></canvas>
+              
+              <!-- Realtime Boxing HUD Overlays (Plain English) -->
+              <div class="hud-overlay-grid">
+                <div class="hud-metric-box" id="hud-guard-box">
+                  <span class="hud-label">GUARD POSITION</span>
+                  <span class="hud-val" id="hud-guard-val">TIGHT (HIGH GUARD)</span>
+                </div>
+                <div class="hud-metric-box" id="hud-velocity-box">
+                  <span class="hud-label">STRIKE VELOCITY</span>
+                  <span class="hud-val" id="hud-velocity-val">9.1 m/s (Knockout Power)</span>
+                </div>
+                <div class="hud-metric-box" id="hud-chin-box">
+                  <span class="hud-label">CHIN POCKET TUCK</span>
+                  <span class="hud-val" id="hud-chin-val">PROTECTED (-15° TILT)</span>
+                </div>
+                <div class="hud-metric-box" id="hud-slips-box">
+                  <span class="hud-label">KINETIC CHAIN FORCE</span>
+                  <span class="hud-val" id="hud-slips-val">1,540 N (84% Core Transfer)</span>
+                </div>
+              </div>
+
+              <!-- Realtime Boxing Callout -->
+              <div class="live-ai-callout callout-boxing" id="boxing-ai-callout">
+                <div class="callout-icon">🥊</div>
+                <div class="callout-body">
+                  <span class="callout-tag">AI CORNER COACH BIOMECHANIC CUE</span>
+                  <p id="boxing-callout-text">Rotate your rear heel 55° and drive the hip forward to unleash 1,540 N of knockout kinetic chain power!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kinetic Chain Training Map -->
+            <section class="kinetic-chain-panel" aria-labelledby="kinetic-chain-title">
+              <div class="kc-panel-heading">
+                <div>
+                  <span class="kc-label">POWER PATH</span>
+                  <h4 id="kinetic-chain-title">How your punch moves</h4>
+                </div>
+                <span class="kc-direction">FOOT <span aria-hidden="true">→</span> FIST</span>
+              </div>
+              <div class="kc-step-flow">
+                <div class="kc-node active-node">
+                  <span class="kc-number">01</span>
+                  <strong>Rear foot pivot</strong>
+                  <small>Start the drive · 55°</small>
+                </div>
+                <div class="kc-node active-node">
+                  <span class="kc-number">02</span>
+                  <strong>Knee & hip torque</strong>
+                  <small>Turn the hips · 48°</small>
+                </div>
+                <div class="kc-node active-node">
+                  <span class="kc-number">03</span>
+                  <strong>Core rotation</strong>
+                  <small>Transfer the force</small>
+                </div>
+                <div class="kc-node active-node">
+                  <span class="kc-number">04</span>
+                  <strong>Shoulder snap</strong>
+                  <small>Accelerate the arm</small>
+                </div>
+                <div class="kc-node active-node">
+                  <span class="kc-number">05</span>
+                  <strong>Fist impact</strong>
+                  <small>Finish through target</small>
+                </div>
+              </div>
+            </section>
+
+            <!-- Strike Counter bar -->
+            <div class="vision-bottom-actions">
+              <div class="punch-counters-strip">
+                <div class="p-counter"><span class="p-num" id="p-count-jabs">18</span> <span class="p-name">Jabs (1)</span></div>
+                <div class="p-counter"><span class="p-num" id="p-count-crosses">14</span> <span class="p-name">Crosses (2)</span></div>
+                <div class="p-counter"><span class="p-num" id="p-count-hooks">9</span> <span class="p-name">Hooks (3/4)</span></div>
+                <div class="p-counter"><span class="p-num" id="p-count-slips">12</span> <span class="p-name">Slips & Rolls</span></div>
+              </div>
+              <button class="btn btn-sm btn-accent" id="boxing-reset-counters-btn">Reset Counters</button>
+            </div>
+          </div>
+
+          <!-- Real-time Boxing Power & Form Sidebar -->
+          <div class="card metrics-sidebar">
+            <div class="card-header">
+              <h3>Strike Biomechanics Analysis</h3>
+              <span class="badge badge-crimson">Live Strike Engine</span>
+            </div>
+
+            <div class="angle-gauges-container">
+              <!-- Gauge 1 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Guard Integrity (Hands Glued to Cheeks)</span>
+                  <strong id="gauge-guard-num">98% Secure</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-crimson" id="gauge-guard-bar" style="width: 98%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 2 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Kinetic Chain Power Transfer</span>
+                  <strong id="gauge-snap-num">94% Efficient</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-amber" id="gauge-snap-bar" style="width: 94%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 3 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Pelvic & Hip Rotation</span>
+                  <strong id="gauge-torso-num">48° Full Drive</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-crimson" id="gauge-torso-bar" style="width: 92%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 4 -->
+              <div class="gauge-item">
+                <div class="gauge-label-row">
+                  <span>Chin Exposure Risk</span>
+                  <strong id="gauge-chin-risk">4% (Fully Protected)</strong>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-green" id="gauge-chin-bar" style="width: 96%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="coach-summary-box coach-box-crimson">
+              <div class="coach-avatar">
+                <span>🥊</span>
+              </div>
+              <div class="coach-message">
+                <strong>Titan AI Corner Coach:</strong>
+                <p id="titan-biomech-summary">"Your right cross kinetic transfer is firing at 1,540 N! Notice how tucking your chin behind your lead shoulder eliminates vulnerability to overhands."</p>
+              </div>
+            </div>
+
+            <div class="quick-action-buttons">
+              <button class="btn btn-outline btn-full" id="btn-save-boxing-sample">Log Strike Snapshot to Passport</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plain-English Biometrics Explainer Guide for Beginners -->
+        <div class="biometric-guide-container">
+          <div class="rules-card-header" style="border: none; padding-bottom: 0;">
+            <h3>💡 Beginner's Biometrics Guide: What do these numbers mean?</h3>
+            <span class="badge badge-amber">Easy to Understand</span>
+          </div>
+          <div class="bio-card-grid">
+            <div class="bio-explain-item">
+              <h5>🟢 Chin Tuck (-15° Angle)</h5>
+              <p>Tucking your chin down into your chest pocket prevents the brain from rotating on impact and eliminates 90% of knockout lever angles.</p>
+            </div>
+            <div class="bio-explain-item">
+              <h5>⚡ Kinetic Chain (Foot ➔ Fist)</h5>
+              <p>Punching power does NOT come from the arms! 80% of power is generated by pivoting the rear foot ball, rotating the hips, and snapping the core.</p>
+            </div>
+            <div class="bio-explain-item">
+              <h5>🛡️ Off-Hand Guard (High Shield)</h5>
+              <p>When throwing a right cross, your left hand MUST stay glued to your cheekbone to block counter left hooks from the opponent.</p>
+            </div>
+            <div class="bio-explain-item">
+              <h5>⚖️ Centerline Slip (65/35 Balance)</h5>
+              <p>Moving your head just 8–12 cm off the center line causes opponent straight punches to miss cleanly while keeping you loaded to counter.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: BOXING VIDEO ACADEMY (YOUTUBE FUNDAMENTALS) -->
+      <section id="boxing-tab-videos" class="app-tab-pane">
+        <div class="academy-hero">
+          <div class="academy-hero-text">
+            <div class="brand-pill">
+              <span class="pulse-dot-red"></span>
+              <span>CHAMPIONSHIP BOXING MASTERY</span>
+            </div>
+            <h2>Boxing Video Academy & Fundamentals</h2>
+            <p>Curated masterclass tutorials for beginners to master stance, guard, the 1-2 combination, hooks, uppercuts, footwork, and head movement.</p>
+          </div>
+          <button class="btn btn-crimson btn-practice-in-tracker">
+            <span>🥊 Practice in Biometric Tracker</span>
+          </button>
+        </div>
+
+        <div class="learning-path" aria-label="How to use the boxing video academy">
+          <div class="learning-path-heading">
+            <span class="eyebrow-label">YOUR SESSION PLAN</span>
+            <h3>Learn one skill at a time</h3>
+            <p>Watch the movement, shadowbox the cue, then test your form in the tracker.</p>
+          </div>
+          <label class="learning-step">
+            <input type="checkbox">
+            <span class="learning-step-number">01</span>
+            <span><strong>Watch</strong><small>Choose one focused lesson</small></span>
+          </label>
+          <label class="learning-step">
+            <input type="checkbox">
+            <span class="learning-step-number">02</span>
+            <span><strong>Practice</strong><small>Shadowbox the key takeaway</small></span>
+          </label>
+          <label class="learning-step">
+            <input type="checkbox">
+            <span class="learning-step-number">03</span>
+            <span><strong>Check</strong><small>Open the biometric tracker</small></span>
+          </label>
+        </div>
+
+        <div class="video-cards-grid">
+          <!-- Video 1: Stance & Guard -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/d3W3wXv82uQ" title="Boxing Stance & Guard for Beginners" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-beginner">Beginner Fundamentals</span>
+                <span class="video-duration">⏱️ 10:15</span>
+              </div>
+              <h4 class="video-lesson-title">The Perfect Boxing Stance, Guard & Footwork</h4>
+              <p class="video-lesson-desc">Learn how to establish a solid 45° orthodox or southpaw stance, protect your chin with high guard, and move without crossing your feet.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> Feet shoulder-width apart at a 45° angle; weight 50/50 on balls of feet.</li>
+                  <li><span class="check-icon">✓</span> Hands up: knuckles touching cheekbones; elbows tucked in tight to ribs.</li>
+                  <li><span class="check-icon">✓</span> Step with lead foot first to advance; step with rear foot first to retreat.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full btn-practice-in-tracker">Test Stance in Biometrics AI</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 2: 1-2 Combo (Jab & Cross) -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/yF_F9x0_d1k" title="The 1-2 Combination Masterclass" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-fundamentals">Strike Mechanics</span>
+                <span class="video-duration">⏱️ 12:40</span>
+              </div>
+              <h4 class="video-lesson-title">How to Throw the 1-2 Combination (Jab & Right Cross)</h4>
+              <p class="video-lesson-desc">Master the bread and butter of boxing: explosive lead jab snap, rear foot pivot, full hip rotation, and instant hand recoil for protection.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> Jab (1): Extend arm fully and rotate knuckles 90° horizontally at impact.</li>
+                  <li><span class="check-icon">✓</span> Cross (2): Pivot rear foot 55° ("squash the bug") and drive hip forward.</li>
+                  <li><span class="check-icon">✓</span> Always return fists back to your chin at the exact same speed as the punch.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full btn-practice-in-tracker">Analyze Cross in Biometrics AI</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 3: Hooks & Uppercuts -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/XqG8y9m_1Nk" title="Hooks & Uppercuts Power Mechanics" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-power">Power Strikes</span>
+                <span class="video-duration">⏱️ 11:50</span>
+              </div>
+              <h4 class="video-lesson-title">Hook & Uppercut Rotational Kinetic Power</h4>
+              <p class="video-lesson-desc">Generate devastating rotational torque for lead hooks (3) and rear uppercuts (6) using full core mechanics instead of arm slaps.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> Lead Hook (3): Pivot lead foot 90°, elbow bent at 90° parallel to floor.</li>
+                  <li><span class="check-icon">✓</span> Uppercut (6): Dip knees slightly and explode upward with legs and hips.</li>
+                  <li><span class="check-icon">✓</span> Never drop the non-punching hand below your eye line.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full" onclick="window.apexApp.switchTab('timer');">Practice in AI Combo Caller</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 4: Head Movement & Defense -->
+          <div class="video-lesson-card">
+            <div class="video-player-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/W9lB8xZ_u7Y" title="Head Movement & Defense Slips" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-card-body">
+              <div class="video-meta-bar">
+                <span class="video-badge badge-fundamentals">Defensive Mastery</span>
+                <span class="video-duration">⏱️ 13:20</span>
+              </div>
+              <h4 class="video-lesson-title">Head Movement: Slips, Rolls & High Guard Shield</h4>
+              <p class="video-lesson-desc">Learn how to make punches miss by inches by slipping outside jabs, ducking under right hooks, and staying loaded to return counter-punches.</p>
+              
+              <div class="takeaways-box">
+                <div class="takeaways-title">💡 Key Takeaways for Beginners:</div>
+                <ul class="takeaways-list">
+                  <li><span class="check-icon">✓</span> Slip with your knees and obliques—never bend purely at your waist.</li>
+                  <li><span class="check-icon">✓</span> Keep your eyes locked on the opponent's chest to read shoulder cues.</li>
+                  <li><span class="check-icon">✓</span> Roll in a 'U' shape under hooks to load your own hook counter.</li>
+                </ul>
+              </div>
+
+              <div class="video-card-footer">
+                <button class="btn btn-outline btn-full" onclick="window.apexApp.switchTab('reflex');">Train in Reflex Speed Lab</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: BOXING RULES & REGULATIONS (UNIFIED RULES GUIDE) -->
+      <section id="boxing-tab-rules" class="app-tab-pane">
+        <div class="rules-hero-card">
+          <div class="rules-hero-left">
+            <div class="brand-pill">
+              <span class="pulse-dot-red"></span>
+              <span>UNIFIED PROFESSIONAL & OLYMPIC RULES</span>
+            </div>
+            <h2>Official Boxing Rules, 10-Point Scoring & Foul Protocol</h2>
+            <p>Crystal-clear guide to how boxing rounds are scored, legal target areas, foul penalties, knockdowns, and standing 8-count rules.</p>
+          </div>
+        </div>
+
+        <div class="rules-sections-grid">
+          <!-- Card 1: 10-Point Must Scoring System -->
+          <div class="rules-card">
+            <div class="rules-card-header">
+              <h3>🏆 The 10-Point Must Scoring System</h3>
+              <span class="badge badge-crimson">Championship Scoring</span>
+            </div>
+            <p class="card-desc" style="margin-bottom: 14px;">Every round is scored independently by 3 ringside judges according to the 10-Point Must System:</p>
+
+            <div class="target-rings-display">
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-gold"></span><strong>10 - 9 Round:</strong> Close / Standard Round</div>
+                <span class="ring-score-val text-amber">Winner gets 10; Opponent gets 9</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-red"></span><strong>10 - 8 Round:</strong> Knockdown or Clear Dominance</div>
+                <span class="ring-score-val text-crimson">1 Knockdown scored against opponent</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-red"></span><strong>10 - 7 Round:</strong> Multi-Knockdown Round</div>
+                <span class="ring-score-val text-crimson">2+ Knockdowns in single round</span>
+              </div>
+              <div class="ring-score-row">
+                <div><span class="ring-color-dot dot-white"></span><strong>10 - 10 Round:</strong> Even Round</div>
+                <span class="ring-score-val text-muted">Rarely awarded by pro judges</span>
+              </div>
+            </div>
+
+            <div class="takeaways-box" style="margin-top: 12px; background: rgba(255, 42, 95, 0.06); border-color: rgba(255, 42, 95, 0.2);">
+              <div class="takeaways-title" style="color: #ff2a5f;">🥊 4 Official Judging Criteria:</div>
+              <ol style="font-size: 11.5px; color: var(--text-secondary); padding-left: 16px; line-height: 1.45;">
+                <li><strong>Clean Punching:</strong> Clean, landed strikes with knuckle part of glove.</li>
+                <li><strong>Effective Aggressiveness:</strong> Landing punches while moving forward.</li>
+                <li><strong>Ring Generalship:</strong> Controlling pace, distance, and ring center.</li>
+                <li><strong>Defense:</strong> Parrying, slipping, and blocking incoming attacks.</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Card 2: Legal Target Zones vs Illegal Fouls -->
+          <div class="rules-card">
+            <div class="rules-card-header">
+              <h3>🎯 Legal Target Zones vs Illegal Strikes</h3>
+              <span class="badge badge-amber">Strike Legality</span>
+            </div>
+
+            <!-- Legal vs Foul Schematic -->
+            <div class="legal-strike-schematic">
+              <div class="zone-box zone-legal">
+                <div class="zone-title">🟢 LEGAL TARGETS</div>
+                <ul class="zone-list">
+                  <li>✓ Front of head & face</li>
+                  <li>✓ Sides of head & temples</li>
+                  <li>✓ Front of torso (chest, solar plexus)</li>
+                  <li>✓ Sides of body (ribs, liver)</li>
+                  <li>✓ All above the belt waistband line</li>
+                </ul>
+              </div>
+              <div class="zone-box zone-foul">
+                <div class="zone-title">🚫 ILLEGAL FOUL ZONES</div>
+                <ul class="zone-list">
+                  <li>✕ Low blows (below belt line / groin)</li>
+                  <li>✕ Rabbit punch (back of head/neck)</li>
+                  <li>✕ Kidney punches (lower back spine)</li>
+                  <li>✕ Hitting with elbow, forearm, or head</li>
+                  <li>✕ Hitting an opponent while down</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Foul Cards -->
+            <div class="foul-cards-grid">
+              <div class="foul-card">
+                <h5>🚫 Low Blow Penalty</h5>
+                <p>Up to 5 minutes recovery time awarded to victim. Point deduction for repeat fouls.</p>
+              </div>
+              <div class="foul-card">
+                <h5>🚫 Clinching & Holding</h5>
+                <p>Holding opponent's arms prevents action. Referee calls "Break!"—step back 1 full step.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Boxing Rules Quiz -->
+        <div class="rules-quiz-card">
+          <div class="rules-card-header" style="border: none; padding-bottom: 0;">
+            <h3>🧠 Boxing Rules Knowledge Check</h3>
+            <span class="badge badge-crimson">Interactive Check</span>
+          </div>
+          <div class="quiz-question-box">
+            <div class="quiz-q-title">Q: Under the 10-Point Must System, Boxer A controls the round and scores one clean knockdown against Boxer B. What is the standard score for this round?</div>
+            <div class="quiz-options-grid">
+              <button class="quiz-opt-btn boxing-quiz-opt" data-correct="false">A) 10 - 9 for Boxer A</button>
+              <button class="quiz-opt-btn boxing-quiz-opt" data-correct="true">B) 10 - 8 for Boxer A (Knockdown deducted point)</button>
+              <button class="quiz-opt-btn boxing-quiz-opt" data-correct="false">C) 10 - 7 for Boxer A</button>
+              <button class="quiz-opt-btn boxing-quiz-opt" data-correct="false">D) 9 - 9 Even Draw</button>
+            </div>
+            <div class="quiz-feedback" id="boxing-quiz-feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: SMART ROUND TIMER & AI VOICE COMBOS -->
+      <section id="boxing-tab-timer" class="app-tab-pane">
+        <div class="pane-grid">
+          <!-- Professional Round Timer Display -->
+          <div class="card boxing-timer-card">
+            <div class="card-header">
+              <div>
+                <h3>Championship Round Timer & Bell</h3>
+                <p class="card-subtitle">Synthesized championship bells, 10s clappers, and voice countdowns.</p>
+              </div>
+              <div class="round-status-pill" id="round-status-pill">
+                <span class="pulse-dot-red"></span>
+                <span id="round-state-text">ROUND IN PROGRESS</span>
+              </div>
+            </div>
+
+            <div class="round-timer-hero">
+              <div class="round-counter-badge">
+                <span>ROUND</span>
+                <strong id="current-round-num">1</strong>
+                <span id="total-rounds-num">/ 12</span>
+              </div>
+
+              <div class="round-clock-digits" id="round-clock-digits">
+                03:00
+              </div>
+
+              <div class="round-sub-info" id="round-sub-info">
+                Next: 60s Rest Period
+              </div>
+            </div>
+
+            <div class="timer-controls-row">
+              <button class="btn btn-crimson btn-xl" id="btn-start-round-timer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span id="round-timer-btn-text">Start Round</span>
+              </button>
+              <button class="btn btn-outline btn-xl" id="btn-pause-round-timer">Pause</button>
+              <button class="btn btn-danger-ghost btn-xl" id="btn-reset-round-timer">Reset Timer</button>
+            </div>
+
+            <!-- Timer Settings Presets -->
+            <div class="timer-presets-row">
+              <button class="preset-pill active" data-round="180" data-rest="60" data-rounds="12">Pro (3 min / 1 min rest / 12 Rds)</button>
+              <button class="preset-pill" data-round="120" data-rest="60" data-rounds="6">Amateur (2 min / 1 min rest / 6 Rds)</button>
+              <button class="preset-pill" data-round="60" data-rest="30" data-rounds="8">HIIT Burn (1 min / 30s rest / 8 Rds)</button>
+              <button class="preset-pill" data-round="30" data-rest="15" data-rounds="10">Tabata Sprints (30s / 15s rest)</button>
+            </div>
+          </div>
+
+          <!-- Dynamic AI Voice Combo Caller -->
+          <div class="card combo-caller-card">
+            <div class="card-header">
+              <h3>Real-Time AI Voice Combo Caller</h3>
+              <span class="badge badge-amber">Interactive Pad Work</span>
+            </div>
+            <p class="card-desc">The AI calls out dynamic combinations and defensive maneuvers in real-time, syncing to your tempo.</p>
+
+            <div class="active-combo-display" id="active-combo-display">
+              <span class="combo-sub-label">CURRENT TARGET COMBO</span>
+              <h2 class="combo-punch-sequence" id="combo-sequence-text">1 - 2 - SLIP RIGHT - 2</h2>
+              <div class="combo-punch-breakdown" id="combo-breakdown">
+                <span class="p-chip">Jab</span>
+                <span class="p-chip">Cross</span>
+                <span class="p-chip p-def">Slip Right</span>
+                <span class="p-chip">Cross</span>
+              </div>
+            </div>
+
+            <div class="combo-settings-grid">
+              <div class="c-col">
+                <label>Caller Pacing:</label>
+                <select id="combo-pacing" class="styled-select">
+                  <option value="4000">Moderate (Every 4.0s)</option>
+                  <option value="2800" selected>Fast (Every 2.8s)</option>
+                  <option value="1800">Pro Blitz (Every 1.8s)</option>
+                </select>
+              </div>
+              <div class="c-col">
+                <label>Combo Complexity:</label>
+                <select id="combo-complexity" class="styled-select">
+                  <option value="basic">Basic (1-2s & Hooks)</option>
+                  <option value="intermediate" selected>Intermediate (+ Slips & Rolls)</option>
+                  <option value="advanced">Advanced (Angles & Body Shots)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="combo-action-row">
+              <button class="btn btn-amber btn-full" id="btn-toggle-combo-caller">
+                <span id="combo-caller-btn-text">🔊 Start Live Voice Calling</span>
+              </button>
+            </div>
+
+            <!-- Number System Cheat Sheet -->
+            <div class="boxing-number-system">
+              <h5>Boxing Number System Reference</h5>
+              <div class="number-tags-grid">
+                <span><strong>1:</strong> Lead Jab</span>
+                <span><strong>2:</strong> Rear Cross</span>
+                <span><strong>3:</strong> Lead Hook</span>
+                <span><strong>4:</strong> Rear Hook</span>
+                <span><strong>5:</strong> Lead Uppercut</span>
+                <span><strong>6:</strong> Rear Uppercut</span>
+                <span><strong>7:</strong> Lead Body Hook</span>
+                <span><strong>8:</strong> Rear Body Hook</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: TITAN AI CORNER COACH (CONVERSATIONAL) -->
+      <section id="boxing-tab-coach" class="app-tab-pane">
+        <div class="chat-layout-grid">
+          <!-- Chat Messages Window -->
+          <div class="card chat-card">
+            <div class="chat-header">
+              <div class="coach-profile">
+                <div class="coach-avatar-lg coach-avatar-crimson">🥊</div>
+                <div>
+                  <h4>Coach Titan | World Title Boxing Strategist</h4>
+                  <p class="coach-status"><span class="status-dot-crimson"></span> Ring Generalship & Fighter AI System</p>
+                </div>
+              </div>
+              <div class="chat-header-actions">
+                <button class="btn-sm btn-ghost" id="boxing-clear-chat-btn">Clear History</button>
+              </div>
+            </div>
+
+            <div class="chat-messages-scroll" id="boxing-chat-messages">
+              <div class="message-bubble coach-msg coach-msg-boxing">
+                <div class="msg-avatar">🥊</div>
+                <div class="msg-content">
+                  <p>Welcome to the gym, champ! I'm <strong>Titan</strong>, your AI Head Corner Coach. I specialize in ring generalship, footwork pivot angles, breaking down southpaw matchups, punch biomechanics, and fight conditioning.</p>
+                  <p>What strategy or drill are we working on in the lab today?</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Prompt Pills -->
+            <div class="quick-prompts-bar" id="boxing-quick-prompts">
+              <button class="prompt-pill" data-prompt="How do I beat a taller southpaw fighter with a strong jab?">🥊 Countering Taller Southpaws</button>
+              <button class="prompt-pill" data-prompt="How can I increase the knockout power and kinetic chain in my right cross?">💥 Maximizing Cross Power</button>
+              <button class="prompt-pill" data-prompt="Give me a 6-round heavy bag workout combining power and volume.">🏋️ 6-Round Heavy Bag Drill</button>
+              <button class="prompt-pill" data-prompt="Teach me how to execute the Philly Shell shoulder roll defense.">🛡️ Philly Shell Defense Breakdown</button>
+              <button class="prompt-pill" data-prompt="What should I do during the 60-second rest period to recover heart rate?">🫁 60-Second Corner Recovery</button>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-row">
+              <input type="text" id="boxing-chat-input" placeholder="Ask Coach Titan anything (e.g. counter strategies, footwork, fight camps)..." autocomplete="off">
+              <button class="btn btn-crimson" id="boxing-chat-send-btn">
+                <span>Send</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Coach Tactical Matrix Sidebar -->
+          <div class="card coach-ref-card">
+            <div class="card-header">
+              <h3>Ring Generalship Playbook</h3>
+            </div>
+            <div class="accordion-group">
+              <div class="acc-card">
+                <div class="acc-header" onclick="this.parentElement.classList.toggle('open')">
+                  <span>🥊 Classic Counter-Punch Triggers</span>
+                  <span class="acc-icon">▼</span>
+                </div>
+                <div class="acc-body">
+                  <ul class="tuning-list">
+                    <li><strong>Opponent Jabs:</strong> Slip inside → Counter Right Hand to body or head.</li>
+                    <li><strong>Opponent Jabs:</strong> Slip outside → Counter Overhand Right over their extended arm.</li>
+                    <li><strong>Opponent Throws Right Cross:</strong> Roll under toward left → Lead Hook to chin or liver (3).</li>
+                    <li><strong>Opponent Throws Lead Hook:</strong> Duck / High guard catch → Return Rear Hook / Cross (2-3).</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="acc-card">
+                <div class="acc-header" onclick="this.parentElement.classList.toggle('open')">
+                  <span>🏃 Footwork & Angle Creation</span>
+                  <span class="acc-icon">▼</span>
+                </div>
+                <div class="acc-body">
+                  <ul class="tuning-list">
+                    <li><strong>Lomachenko Pivot:</strong> Step outside opponent's lead foot while throwing jab, pivot 90° behind their guard.</li>
+                    <li><strong>Step-Back Pull:</strong> Lean back 4 inches from jab, immediately explode forward with straight 2.</li>
+                    <li><strong>Cutting off the Ring:</strong> Step diagonally rather than chasing in straight lines.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: REFLEX & REACTION SPEED LAB -->
+      <section id="boxing-tab-reflex" class="app-tab-pane">
+        <div class="pane-grid">
+          <!-- Interactive Reaction Minigame Pad -->
+          <div class="card reflex-tester-card">
+            <div class="card-header">
+              <div>
+                <h3>Millisecond Reflex & Slip Speed Trainer</h3>
+                <p class="card-subtitle">Click the pad or press SPACE as soon as the target turns NEON GREEN!</p>
+              </div>
+              <span class="badge badge-amber" id="reflex-grade-badge">PRO GRADE: --</span>
+            </div>
+
+            <div class="reaction-pad-container" id="reaction-pad-wrapper">
+              <div class="reaction-target-pad state-idle" id="reaction-target-pad" tabindex="0">
+                <div class="pad-icon" id="pad-icon">⚡</div>
+                <h2 id="pad-status-title">CLICK TO ARM SENSORS</h2>
+                <p id="pad-status-sub">Wait for GREEN, then strike immediately!</p>
+                <div class="reaction-time-badge" id="reaction-result-display" style="display: none;">
+                  <span id="reaction-ms-number">182</span> ms
+                </div>
+              </div>
+            </div>
+
+            <div class="reaction-stats-bar">
+              <div class="r-stat">
+                <span>Best Reaction:</span>
+                <strong id="r-stat-best">-- ms</strong>
+              </div>
+              <div class="r-stat">
+                <span>Average (Last 5):</span>
+                <strong id="r-stat-avg">-- ms</strong>
+              </div>
+              <div class="r-stat">
+                <span>Total Trials:</span>
+                <strong id="r-stat-trials">0</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reaction Speed Benchmarks & Fighter Tiers -->
+          <div class="card benchmark-card">
+            <div class="card-header">
+              <h3>Fighter Reflex Tiers</h3>
+            </div>
+            
+            <div class="benchmarks-list">
+              <div class="tier-item pro-tier">
+                <div class="tier-header">
+                  <span class="tier-name">🏆 World Champion Elite</span>
+                  <span class="tier-range">&lt; 190 ms</span>
+                </div>
+                <p class="tier-desc">World-class counter-punchers (e.g., Mayweather, Roy Jones Jr., Canelo).</p>
+              </div>
+
+              <div class="tier-item sharp-tier">
+                <div class="tier-header">
+                  <span class="tier-name">⚡ Sharp Amateur Competitor</span>
+                  <span class="tier-range">190 ms – 240 ms</span>
+                </div>
+                <p class="tier-desc">Fast slips, clean parries, and responsive counter-attacks.</p>
+              </div>
+
+              <div class="tier-item avg-tier">
+                <div class="tier-header">
+                  <span class="tier-name">🥊 Club Fighter Average</span>
+                  <span class="tier-range">240 ms – 310 ms</span>
+                </div>
+                <p class="tier-desc">Standard athletic reaction time. Room for improvement via visual stimulus drills.</p>
+              </div>
+
+              <div class="tier-item slow-tier">
+                <div class="tier-header">
+                  <span class="tier-name">⚠️ Vulnerable to Counters</span>
+                  <span class="tier-range">&gt; 310 ms</span>
+                </div>
+                <p class="tier-desc">Likely getting caught by fast lead jabs. Train peripheral vision & anticipation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: BOXING FIGHT ANALYTICS -->
+      <section id="boxing-tab-analytics" class="app-tab-pane">
+        <div class="card full-width-card">
+          <div class="card-header">
+            <div>
+              <h3>Boxing Workout & Sparring Analytics</h3>
+              <p class="card-subtitle">Comprehensive strike volume, combo completion rates, and power sustainability.</p>
+            </div>
+            <button class="btn-sm btn-outline" id="btn-export-boxing-stats">Export Fight Camp Log</button>
+          </div>
+
+          <div class="analytics-metrics-grid">
+            <div class="metric-card">
+              <span class="metric-title">Punches Thrown</span>
+              <span class="metric-value" id="stats-boxing-total-punches">482</span>
+              <span class="metric-sub text-crimson">80.3 punches / round</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Average Strike Velocity</span>
+              <span class="metric-value" id="stats-boxing-avg-velocity">8.6 m/s</span>
+              <span class="metric-sub text-amber">High explosive output</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Guard Uptime</span>
+              <span class="metric-value" id="stats-boxing-guard-uptime">94.8%</span>
+              <span class="metric-sub text-green">Minimal chin exposure</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Median Reflex Time</span>
+              <span class="metric-value" id="stats-boxing-median-reflex">208 ms</span>
+              <span class="metric-sub text-amber">Sharp fighter tier</span>
+            </div>
+          </div>
+
+          <div class="session-history-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Round #</th>
+                  <th>Strike Breakdown (J/C/H/U)</th>
+                  <th>Avg Velocity</th>
+                  <th>Guard Integrity</th>
+                  <th>Coach Titan Verdict</th>
+                </tr>
+              </thead>
+              <tbody id="boxing-rounds-table-body">
+                <tr>
+                  <td>Round 1</td>
+                  <td>24 Jabs, 18 Crosses, 8 Hooks, 4 Uppercuts</td>
+                  <td><strong class="text-amber">8.8 m/s</strong></td>
+                  <td>97%</td>
+                  <td><span class="badge badge-success">Explosive 1-2 Starts</span></td>
+                </tr>
+                <tr>
+                  <td>Round 2</td>
+                  <td>28 Jabs, 20 Crosses, 12 Hooks, 6 Uppercuts</td>
+                  <td><strong class="text-amber">8.5 m/s</strong></td>
+                  <td>94%</td>
+                  <td><span class="badge badge-success">Excellent Slip-Counters</span></td>
+                </tr>
+                <tr>
+                  <td>Round 3</td>
+                  <td>19 Jabs, 14 Crosses, 6 Hooks, 2 Uppercuts</td>
+                  <td><strong class="text-yellow">7.9 m/s</strong></td>
+                  <td>89%</td>
+                  <td><span class="badge badge-warning">Pace Dropped in Last 30s</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="js/audio-synth.js"></script>
+  <script src="js/speech-coach.js"></script>
+  <script src="js/vision-analyzer.js"></script>
+  <script src="js/archery-tools.js"></script>
+  <script src="js/boxing-tools.js"></script>
+  <script src="js/ai-coach.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
