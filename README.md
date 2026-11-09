@@ -19,5 +19,6 @@ Track punch speed, reaction time, movement efficiency, and overall performance.
 📊 Performance Dashboard
 Monitor progress over time and identify strengths and weaknesses.
 🏋️ AI Workout Generation
+
 Generate personalized boxing workouts based on performance and training goals.
 🔄 **Progress.
